@@ -6,8 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const connetDb = require("./config/dbConn");
-// const e = require("express");
-// const { log } = require("console");
+const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const Port = process.env.port;
 const secret = "adfadfadfadfw3434";
@@ -15,6 +14,7 @@ connetDb;
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
+app.use(cookieParser());
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
@@ -47,6 +47,16 @@ app.post("/login", async (req, res) => {
   } else {
     res.status(400).json("Wrong Credentials");
   }
+});
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, (err, info) => {
+    if (err) throw err;
+    res.json(info);
+  });
+});
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json("ok");
 });
 
 app.listen(4000, (req, res) => {
