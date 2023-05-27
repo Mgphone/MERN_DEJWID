@@ -1,0 +1,10 @@
+useContext...import from react
+first create UserContext|context.js
+1.import create from react or use with react.createContext
+2.then create UserContextProvider code with children inside the usercontext.provider
+
+then all the Route quote inside the UserContextProvider
+
+////multer error
+just need to reinstall multer
+single file name support to be same name as name on the input of HTML
