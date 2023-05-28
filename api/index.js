@@ -2,6 +2,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const User = require("./models/User");
+const Post = require("./models/Post");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -12,7 +13,7 @@ const jwt = require("jsonwebtoken");
 const Port = process.env.port;
 const secret = "adfadfadfadfw3434";
 const multer = require("multer");
-const path = require("path");
+// const path = require("path");
 const uploadMiddleware = multer({ dest: "uploads/" });
 
 connetDb;
@@ -69,10 +70,20 @@ app.get("/profile", (req, res) => {
 });
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
-  const parts = originalname.split(".");
+  const parts = originalname.split("/.");
+
   const ext = parts[parts.length - 1];
-  fs.renameSync(path, path + "." + ext);
-  res.json({ files: req.file });
+  const newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
+  const { title, summary, content } = req.body;
+  const PostDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+  });
+
+  res.json(PostDoc);
 });
 
 app.post("/logout", (req, res) => {
