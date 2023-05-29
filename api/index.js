@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const User = require("./models/User");
@@ -13,8 +14,10 @@ const jwt = require("jsonwebtoken");
 const Port = process.env.port;
 const secret = "adfadfadfadfw3434";
 const multer = require("multer");
+const { log } = require("console");
 // const path = require("path");
 const uploadMiddleware = multer({ dest: "uploads/" });
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 connetDb;
 
@@ -70,22 +73,29 @@ app.get("/profile", (req, res) => {
 });
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
-  const parts = originalname.split("/.");
-
+  const parts = originalname.split(".");
   const ext = parts[parts.length - 1];
   const newPath = path + "." + ext;
+
   fs.renameSync(path, newPath);
-  const { title, summary, content } = req.body;
-  const PostDoc = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw err;
+    const { title, summary, content } = req.body;
+    const PostDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+
+    res.json(PostDoc);
   });
-
-  res.json(PostDoc);
 });
-
+app.get("/post", async (req, res) => {
+  res.json(await Post.find().populate("author", ["username"]));
+});
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");
 });
