@@ -7,10 +7,11 @@ export default function Post({
   updatedAt,
   author,
 }) {
+  let filepath = cover.replace(/\\/g, "/");
   return (
     <div className="post">
       <div className="image">
-        <img src={"http://localhost:4000/uploads/" + cover} alt="foto of " />
+        <img src={"http://localhost:4000/" + filepath} alt="foto of " />
       </div>
       <div className="text">
         <h2>{title}</h2>
