@@ -14,8 +14,7 @@ const jwt = require("jsonwebtoken");
 const Port = process.env.port;
 const secret = "adfadfadfadfw3434";
 const multer = require("multer");
-const { log } = require("console");
-// const path = require("path");
+
 const uploadMiddleware = multer({ dest: "uploads/" });
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
@@ -76,7 +75,6 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const parts = originalname.split(".");
   const ext = parts[parts.length - 1];
   const newPath = path + "." + ext;
-  console.log(newPath);
   fs.renameSync(path, newPath);
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, async (err, info) => {
@@ -94,7 +92,13 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   });
 });
 app.get("/post", async (req, res) => {
-  res.json(await Post.find().populate("author", ["username"]));
+  res.json(
+    await Post.find().populate("author", ["username"]).sort({ createdAt: -1 })
+  );
+});
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Post.findById(id).populate("author", ["username"]));
 });
 app.post("/logout", (req, res) => {
   res.cookie("token", "").json("ok");

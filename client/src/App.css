@@ -44,11 +44,11 @@ div.post{
   }
 }
 
-div.post div.texts h2{
+div.post div.text h2{
   margin:0;
   font-size: 2rem;
 }
-div.post div.texts a{
+div.post div.text a{
   text-decoration:none;
   color: inherit;
 }
@@ -85,4 +85,34 @@ button{
 }
 form.login,form.register h1{
 text-align: center;
+}
+div.post-page div.image{
+  max-height: 300px;
+  display: flex;
+  
+}
+div.post-page div.image img{
+  object-fit: cover;
+  object-position: center center;
+  width:100%;
+}
+div.post-page h1{
+  text-align: center;
+}
+div.post-page time{
+  text-align: center;
+  display: block;
+  font-size: 1rem;
+  color:#aaa;
+  
+}
+div.post-page div.author{
+  text-align:center;
+  font-size:.7rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color:#ccc
+}
+div.content p{
+  line-height: 1.5rem;
 }
