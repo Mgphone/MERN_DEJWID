@@ -1,3 +1,4 @@
+import { id } from "date-fns/locale";
 import Post from "../Components/post";
 import { useEffect, useState } from "react";
 export default function HomePage() {
@@ -10,5 +11,10 @@ export default function HomePage() {
     });
   }, []);
 
-  return <>{posts.length > 0 && posts.map((post) => <Post {...post} />)};</>;
+  return (
+    <>
+      {posts.length > 0 &&
+        posts.map((post, index) => <Post key={index} {...post} />)}
+    </>
+  );
 }

@@ -116,3 +116,27 @@ div.post-page div.author{
 div.content p{
   line-height: 1.5rem;
 }
+div.edit-row{
+  text-align:center;
+  padding:30px;
+  
+}
+div.post-page a.edit-btn{
+  background-color:#333 ;
+  align-items:center;
+  padding: 15px 30px;
+  gap:5px;
+  color:#fff;
+  border-radius: 20px;
+  display: inline-flex;
+
+}
+div.post-page a.edit-btn:hover{
+  background-color: red;
+}
+div.edit-row a{
+  text-decoration: none;
+}
+a svg{
+height: 20px;
+}
