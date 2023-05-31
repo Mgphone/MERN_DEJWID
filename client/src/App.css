@@ -140,3 +140,6 @@ div.edit-row a{
 a svg{
 height: 20px;
 }
+a{
+  cursor: pointer;
+}

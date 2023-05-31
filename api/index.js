@@ -6,23 +6,28 @@ const User = require("./models/User");
 const Post = require("./models/Post");
 const express = require("express");
 const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
 const app = express();
 const connetDb = require("./config/dbConn");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
-
 const Port = process.env.port;
 const secret = "adfadfadfadfw3434";
-const multer = require("multer");
 
-const uploadMiddleware = multer({ dest: "uploads/" });
+const { logger, logEvents } = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
+
+const uploadMiddleware = require("./middleware/multer");
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 connetDb;
+app.use(logger);
+app.use(errorHandler);
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
@@ -37,8 +42,6 @@ app.post("/register", async (req, res) => {
     console.log(error);
     res.status(400).json(error);
   }
-
-  // res.json('test okay')
 });
 
 app.post("/login", async (req, res) => {
@@ -119,7 +122,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
     if (!isAuthor) {
       return res.status(400).json("you are not the author");
     }
-    await postDoc.update({
+    await postDoc.updateOne({
       title,
       summary,
       content,
